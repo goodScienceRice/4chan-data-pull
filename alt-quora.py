@@ -233,13 +233,13 @@ def run(playwright: Playwright, topic: str, output_dir: str, s3_bucket: str = No
         upload_file_to_s3(merged_file_path, s3_bucket, s3_file_key)
 
     # Delete the local output directory after uploading
-#    delete_local_directory(output_dir)
+    delete_local_directory(output_dir)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Scrape content from a Quora topic with infinite scroll and upload it to S3.')
     parser.add_argument('-t', '--topic', type=str, required=True, help='Quora topic to scrape (e.g., "politics" or "technology")')
     parser.add_argument('-o', '--output_dir', type=str, default='output', help='Directory to save the scraped files')
-    parser.add_argument('--s3_bucket', type=str, help='S3 bucket name to upload scraped files')
+    parser.add_argument('--s3_bucket', type=str, default='nyc-ccc', help='S3 bucket name to upload scraped files')
     parser.add_argument('--scroll_limit', type=int, default=10, help='Maximum number of scrolls to perform (for infinite scroll)')
     args = parser.parse_args()
 
