@@ -281,7 +281,7 @@ def run(playwright: Playwright, board: str, max_scrolls: int, output_dir: str, s
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Scrape posts from 4chan with infinite scroll by page.')
-    parser.add_argument('-b', '--board', type=str, default='pol', help='The 4chan board to scrape')
+    parser.add_argument('-b', '--board', type=str, help='The 4chan board to scrape')
     parser.add_argument('-s', '--max_scrolls', type=int, default=10, help='Maximum number of scrolls per page')
     parser.add_argument('-o', '--output_dir', type=str, default='output', help='Directory to save the scraped files')
     parser.add_argument('--s3_bucket', type=str, default='nyc-ccc', help='S3 bucket name to upload scraped files')
