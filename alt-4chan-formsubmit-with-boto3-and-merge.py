@@ -1,5 +1,6 @@
 import argparse
 import os
+import shutil
 import boto3
 from botocore.exceptions import ClientError
 from playwright.sync_api import Playwright, sync_playwright, expect
@@ -152,6 +153,19 @@ def merge_files(output_dir: str, merged_file_name: str) -> str:
     print(f"Merged file saved at {merged_file_path}")
     return merged_file_path
 
+def delete_local_directory(directory: str):
+    """
+    Delete the specified local directory and all its contents.
+
+    Args:
+        directory (str): The path to the directory to delete.
+    """
+    try:
+        shutil.rmtree(directory)
+        print(f"Local directory '{directory}' has been deleted.")
+    except Exception as e:
+        print(f"Failed to delete directory '{directory}': {e}")
+
 def click_all_button(page):
     """
     This function clicks the "All" button to enable infinite scrolling on the first page if it exists.
@@ -262,12 +276,15 @@ def run(playwright: Playwright, board: str, max_scrolls: int, output_dir: str, s
         s3_file_key = os.path.join(s3_prefix, merged_file_name)
         upload_file_to_s3(merged_file_path, s3_bucket, s3_file_key)
 
+    # Delete the local output directory after uploading
+    delete_local_directory(output_dir)
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Scrape posts from 4chan with infinite scroll by page.')
-    parser.add_argument('-b', '--board', type=str, help='The 4chan board to scrape')
-    parser.add_argument('-s', '--max_scrolls', type=int, default=20, help='Maximum number of scrolls per page')
+    parser.add_argument('-b', '--board', type=str, default='pol', help='The 4chan board to scrape')
+    parser.add_argument('-s', '--max_scrolls', type=int, default=10, help='Maximum number of scrolls per page')
     parser.add_argument('-o', '--output_dir', type=str, default='output', help='Directory to save the scraped files')
-    parser.add_argument('--s3_bucket', type=str,default='nyc-ccc', help='S3 bucket name to upload scraped files')
+    parser.add_argument('--s3_bucket', type=str, default='nyc-ccc', help='S3 bucket name to upload scraped files')
     parser.add_argument('--region', type=str, default='us-east-1', help='AWS region for S3 bucket')
     args = parser.parse_args()
 
