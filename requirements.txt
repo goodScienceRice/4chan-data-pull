@@ -2,3 +2,6 @@ argparse
 transformers 
 playwright
 boto3
+pydantic
+fastapi
+aiofiles
