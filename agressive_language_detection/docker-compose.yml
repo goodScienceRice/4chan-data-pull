@@ -1,0 +1,28 @@
+version: "3.9"
+services:
+  app:
+    build:
+      context: ./docker
+    ports:
+      - 8888:8888
+      - 7860:7860
+    volumes:
+      - ./:/app/
+    environment:
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_REGION_ID=${AWS_REGION}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    command: jupyter lab --allow-root  --ip=0.0.0.0 --NotebookApp.password='${JUPYTER_PASSWORD}' --NotebookApp.token='${JUPYTER_PASSWORD}'
+
+#  nginx:
+#    image: nginx
+#    volumes:
+#      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+#      - ./nginx/key.pem:/root/ssl/key.pem
+#      - ./nginx/cert.pem:/root/ssl/cert.pem
+#    ports:
+#      - "443:443"
+#    depends_on:
+#      - app
+
